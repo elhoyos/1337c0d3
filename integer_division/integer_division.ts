@@ -16,24 +16,24 @@ function positive(i: number) {
 function divide(dividend: number, divisor: number): number {
     const isNegativeQuotient = dividend < 0 !== divisor < 0;
     
-    if (divisor == 1) return withinRange(dividend);
-    if (divisor == -1) return withinRange(-dividend);
     if (dividend == divisor) return 1;
 
-    const pDividend = positive(dividend);
+    let pDividend = positive(dividend);
     const pDivisor = positive(divisor);
-
-    let i = pDivisor;
     let quotient = 0;
-    while (i <= pDividend) {
-        const jump = i + i;
-        if (jump <= pDividend) {
-            quotient += quotient + 1;
-            i = jump;
-        } else {
-          quotient++;        
-          i += pDivisor;
+    while (pDivisor <= pDividend) {
+        let jump = pDivisor;
+        let multiple = 1;
+
+        while (jump + jump <= pDividend) {
+            jump += jump;
+            multiple += multiple;
         }
+
+        pDividend -= jump;
+        quotient += multiple;
+            
+        console.log(`dividend=${pDividend}, divisor=${pDivisor}, quotient=${quotient}, jump=${jump}`)
     }
 
     if (isNegativeQuotient) {
