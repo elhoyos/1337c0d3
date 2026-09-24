@@ -12,9 +12,9 @@ def divide(dividend, divisor):
     if dividend == 0: return 0
     if dividend == divisor: return 1
 
-    is_negative = False
-    if not (dividend > 0 and divisor > 0):
-        is_negative = True
+    is_negative = True
+    if (dividend > 0 and divisor > 0) or (dividend < 0 and divisor < 0):
+    	is_negative = False
 
     quotient = 0
     dividend = abs(dividend)
@@ -62,6 +62,10 @@ def test():
             (2147483647, -1),
             -2147483647
         ],
+	[
+	    (-2147483648, -1),
+	    2147483647
+	]
     ]
 
     for input, want in tests:
