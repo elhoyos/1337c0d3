@@ -38,11 +38,12 @@ def knapsack(input):
         memo = Memo()
         n = len(values)
         for i in range(n - 1, -1, -1):
-            for rem in range(capacity + 1):
-                if weights[i] <= rem:
-                    memo[(i, rem)] = max(
-                        memo[(i + 1, rem)],
-                        memo[(i + 1, rem - weights[i])] + values[i]
+            for c in range(capacity + 1):
+                memo[(i, c)] = memo[(i + 1, c)]
+                if weights[i] <= c:
+                    memo[(i, c)] = max(
+                        memo[(i, c)],
+                        memo[(i + 1, c - weights[i])] + values[i]
                     )
 
         return memo[(0, capacity)]
