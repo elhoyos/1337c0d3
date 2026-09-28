@@ -1,7 +1,7 @@
 # uv run 0_1_knapsack.py
 
 def knapsack(input):
-    first, *rest = input
+    (_, capacity), *rest = input
     memo = {}
 
     # top-down
@@ -29,25 +29,23 @@ def knapsack(input):
 
         return memo[i][rem]
 
+    class Memo(dict):
+        def __missing__(self, key):
+            return 0
+
     # bottom-up
     def knapsack_iterative(values, weights, capacity):
+        memo = Memo()
         n = len(values)
-        for i in range(n + 1):
+        for i in range(n - 1, -1, -1):
             for rem in range(capacity + 1):
-                if i == 0 or rem == 0:
-                    memo[(i, rem)] = 0
-                    continue
+                if weights[i] <= rem:
+                    memo[(i, rem)] = max(
+                        memo[(i + 1, rem)],
+                        memo[(i + 1, rem - weights[i])] + values[i]
+                    )
 
-                pick = 0
-
-                if weights[i - 1] <= rem:
-                    pick = memo[(i - 1, rem - weights[i - 1])] + values[i - 1]
-
-                no_pick = memo[(i - 1, rem)]
-
-                memo[(i, rem)] = max(pick, no_pick)
-
-        return memo[(n, capacity)]
+        return memo[(0, capacity)]
 
     values = []
     weights = []
@@ -55,8 +53,8 @@ def knapsack(input):
         values.append(v)
         weights.append(w)
 
-    # return knapsack_recursive(0, first[1])
-    return knapsack_iterative(values, weights, first[1])
+    # return knapsack_recursive(0, capacity)
+    return knapsack_iterative(values, weights, capacity)
 
 def test():
   tests = [
