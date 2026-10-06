@@ -6,7 +6,7 @@
 # ///
 
 
-def coinChange(coins, amount):
+def coin_change_recursive(coins, amount):
     memo = {}
     inf = float('inf')
 
@@ -23,9 +23,23 @@ def coinChange(coins, amount):
                 min_coins = min(min_coins, 1 + res)
 
         memo[remaining] = min_coins if min_coins != inf else -1
+
         return memo[remaining]
 
     return solve(amount)
+
+def coin_change_iterative(coins, amount):
+    inf = float('inf')
+    memo = {0: 0}
+    for a in range(1, amount + 1):
+        for coin in coins:
+            if coin <= a:
+                memo[a] = min(
+                    memo.get(a - coin, inf) + 1,
+                    memo.get(a, inf)
+                )
+
+    return memo[amount] if memo.get(amount, inf) != inf else -1
 
 def test():
     tests = [
@@ -60,9 +74,13 @@ def test():
     ]
 
     for input, want in tests:
-        res = coinChange(*input)
-        if want != res:
-            raise RuntimeError(f"Unexpected response, want={want}, got={res}")
+        responses = [
+            ("recursive", coin_change_recursive(*input)),
+            ("iterative", coin_change_iterative(*input))
+        ]
+        for name, res in responses:
+            if want != res:
+                raise RuntimeError(f"Unexpected response for '{name}', want={want}, got={res}")
 
 if __name__ == "__main__":
     test()
